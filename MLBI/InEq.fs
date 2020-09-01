@@ -1,0 +1,3 @@
+module InEq
+
+open CamlCompat
