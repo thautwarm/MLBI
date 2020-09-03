@@ -22,6 +22,7 @@ id :: forall a. a -> a
 ids :: list (forall a. a -> a)
 inc :: int -> int
 incs :: list (int -> int)
+(:) :: forall a. a -> [a] -> [a]
 ```
 
 The inference results:
