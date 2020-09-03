@@ -28,6 +28,7 @@ and t =
 | Fun of t * t
 | Bou of un
 | Nom of string
+| Tup of t list
 | Forall of un list * t
     with override this.ToString() = Core.show_t this
     end
@@ -68,6 +69,7 @@ let transform self root =
     | App(a, b) -> App(self a, self b)
     | Fun(a, b) -> Fun(self a, self b)
     | Forall(uns, t) -> Forall(uns, self t)
+    | Tup xs -> Tup <| List.map self xs
 
 
 let rec fix = fun f x ->
@@ -102,6 +104,7 @@ let show_t x =
       !f ^ " " ^ nest a
     | Fun(a, r) ->
       nest a ^ " -> " ^ !r
+    | Tup xs -> "(" ^ String.concat ", " (List.map show_t xs) ^ ")"
     | Forall(ns, t)  ->
       "forall " ^ String.concat " " (List.map show_un ns)
       ^ "." ^ !t

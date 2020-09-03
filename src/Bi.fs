@@ -8,7 +8,6 @@ open HM
 open FSharp.Compatibility.OCaml
 open Mlib
 
-
 type rels =
   { le : t list
   ; ge : t list

@@ -34,4 +34,5 @@ let rec unify : t -> t -> bool =
   | Fun(a1, r1), Fun(a2, r2)
   | App(a1, r1), App(a2, r2) ->
     unify a1 a2 && unify r1 r2
+  | Tup xs1, Tup xs2 -> List.for_all2 unify xs1 xs2
   | _ -> false

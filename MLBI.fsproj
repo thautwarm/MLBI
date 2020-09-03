@@ -1,3 +1,4 @@
+
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -5,26 +6,19 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="src/AST.fs" />
     <Compile Include="src/Mlib.fs" />
     <Compile Include="src/Rt.fs" />
     <Compile Include="src/Core.fs" />
-    <Compile Include="src/Log.fs" />
     <Compile Include="src/OpCPS.fs" />
+    <Compile Include="src/Log.fs" />
     <Compile Include="src/HM.fs" />
     <Compile Include="src/Bi.fs" />
-    <Compile Include="src/AST.fs" />
     <Compile Include="src/Infer.fs" />
     <Compile Include="Program.fs" />
-    <!-- <Compile Include="MLBI/Common.fs" />
-    <Compile Include="MLBI/CamlCompat.fs" />
-    <Compile Include="MLBI/HM.fs" />
-    <Compile Include="MLBI/HMUnification.fs" />
-    <Compile Include="MLBI/BI.fs" />
-    <Compile Include="MLBI/AST.fs" />
-    <Compile Include="MLBI/Infer.fs" />
-    <Compile Include="Program.fs" /> -->
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="FSharp.Compatibility.OCaml" Version="0.1.14" />
+    <PackageReference Include="FsLexYacc" Version="10.0.0" />
   </ItemGroup>
 </Project>

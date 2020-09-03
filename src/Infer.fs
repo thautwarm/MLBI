@@ -28,6 +28,7 @@ let rec infer_t : tyEnv  -> Surf.ty_expr -> t =
     match
         match ty_expr with
         | Surf.TNew tn -> gensym () |> Nom |> T
+        | Surf.TTup xs -> Tup <| List.map (infer_t tyEnv) xs |> T
         | Surf.TSym a ->
             T <| Nom a
         | Surf.TVar "_" ->
@@ -68,9 +69,12 @@ let rec infer_term :
     -> t =
     fun tyEnv ->
     function
+    | Surf.EInt _ -> Nom "int"
+    | Surf.ETup xs ->
+        Tup <| List.map (infer_term tyEnv) xs
     | Surf.EVar v ->
         let v' = new_tvar()
-        checkUnifyI ineqs v' <| tyEnv.[v]
+        checkUnifyI ineqs <| v' <| tyEnv.[v]
         v'
     | Surf.ELam(s, v) ->
         let a = new_tvar()

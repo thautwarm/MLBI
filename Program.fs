@@ -69,17 +69,23 @@ let main argv =
           , EVar("ids")
           )
 
-    // let t1 = infer_term tyEnv e1
-    // let t2 = infer_term tyEnv e2
-    // let t3 = infer_term tyEnv e3
+    let e5 =
+        let xs = [EVar("ids"); EVar("ids"); EVar("incs"); EVar("ids")]
+        in
+        List.foldBack (fun a b -> EApp(EApp(EVar("++"), a), b)) xs (EVar "ids")
+    let t1 = infer_term tyEnv e1
+    let t2 = infer_term tyEnv e2
+    let t3 = infer_term tyEnv e3
     let t4 = infer_term tyEnv e4
+    let t5 = infer_term tyEnv e5
     printfn "start solving"
     printfn "can solve? %b" <| Bi.solveInEqs !Infer.ineqs
     for t in [
-            //   t1;
-            //   t2;
-            //   t3;
-              t4
+               t1;
+               t2;
+               t3;
+               t4;
+               t5
              ] do
         printfn "%O" <| prune t
     done

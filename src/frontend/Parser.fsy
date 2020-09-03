@@ -1,0 +1,56 @@
+﻿﻿%{
+open AST
+%}
+
+%start start
+
+%token LET
+%token IN
+%token FUN
+%token ARROW
+%token < string > NAME
+%token < int > INT
+%token RP
+%token LP
+%token COMMA
+%token FORALL
+%token EXTERN
+%token DOT
+%token SEMICOLON
+%token COLON
+%token QUOTE
+%token XOR
+
+%token EOF
+
+%type < AST.expr list > start
+
+%%
+
+start: list(wrapped_stmt) EOF { $1 }
+
+wrapped_stmt : expr SEMICOLON { $1 }
+
+expr : LET NAME IN expr  { ELet(None, $2, $4) }
+	 | LET NAME COLON type IN expr  { ELet(Some $4, $2, $6) }
+	 | FUN NAME ARROW expr { ELam($2, $4) }
+	 | call QUOTE atom QUOTE expr { EApp(EApp($3, $1), $5) }
+	 | call { $1 }
+
+call : call atom { EApp($1, $2) }
+	 | atom { $1 }
+
+atom : LP expr RP { $2 }
+	 | XOR separated_list(COMMA, expr) XOR { ETup ($2) }
+	 | NAME { EVar($1) }
+	 | INT { EInt($1) }
+
+type : FORALL list[NAME] DOT type { TForall($2, $4) }
+	 | typeapp ARROW type { TArrow($1, $2) }
+	 | typeapp { $1 }
+
+typeapp : typeapp typeatom { TApp($1, $2) }
+		| typeatom { $1 }
+
+typeatom : XOR separated_list(COMMA, type) XOR { TTup($2) }
+		 | NAME { TVar $1 }

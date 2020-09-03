@@ -19,6 +19,7 @@ let rec transform_post post root =
         | App(a, b) -> App(self a, self b)
         | Fun(a, b) -> Fun(self a, self b)
         | Forall(uns, t) -> Forall(uns, self t)
+        | Tup xs -> Tup <| List.map self xs
     in post t
 
 let transform_ctx self ctx root =
@@ -29,6 +30,7 @@ let transform_ctx self ctx root =
     | App(a, b) -> App(self a, self b)
     | Fun(a, b) -> Fun(self a, self b)
     | Forall(uns, t) -> Forall(uns, self t)
+    | Tup xs -> Tup <| List.map self xs
 
 let check self root =
     match root with
@@ -37,6 +39,7 @@ let check self root =
     | App(a, b) -> self a && self b
     | Fun(a, b) -> self a && self b
     | Forall(_, t) -> self t
+    | Tup xs -> List.for_all self xs
 
 let fresh =
     transform_ctx @@ let rec subst fresh term =
@@ -91,6 +94,7 @@ let rec unifyI cs lhs rhs =
     | lhs, Var v -> cs := GE(v, lhs)::!cs; true
     | App(f1, a1), App(f2, a2) ->
         unifyI cs f1 f2 && unifyI cs a1 a2
+    | Tup xs1, Tup xs2 -> List.for_all2 (unifyI cs) xs1 xs2
     | Fun(a1, r1), Fun(a2, r2) ->
         unifyI cs a2 a1 && unifyI cs r1 r2
     | lhs, (Forall(_, _) as rhs) ->
